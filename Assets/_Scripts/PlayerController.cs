@@ -14,9 +14,21 @@ public class PlayerController : MonoBehaviour
     public readonly int MovementXHash = Animator.StringToHash("MovementX");
     public readonly int MovementYHash = Animator.StringToHash("MovementY");
     public readonly int IsRunningHash = Animator.StringToHash("isRunning");
+    public readonly int IsAttackingHash = Animator.StringToHash("isAttacking");
 
+    [Header("Movement Stats")]
+    [SerializeField]
+    private Vector3 moveDirection;
+    [SerializeField]
+    private float walkSpeed;
+    [SerializeField]
+    private float runSpeed;
     [SerializeField]
     private bool isRunning;
+    [SerializeField]
+    private bool isAttacking;
+
+    private Vector2 inputVector;
 
     private void Start()
     {
@@ -25,10 +37,10 @@ public class PlayerController : MonoBehaviour
 
     private void OnMovement(InputValue value)
     {
-        Vector2 input = value.Get<Vector2>();
+        inputVector = value.Get<Vector2>();
 
-        anim.SetFloat(MovementXHash, input.x);
-        anim.SetFloat(MovementYHash, input.y);
+        anim.SetFloat(MovementXHash, inputVector.x);
+        anim.SetFloat(MovementYHash, inputVector.y);
     }
 
     private void OnRun(InputValue value)
@@ -44,11 +56,29 @@ public class PlayerController : MonoBehaviour
 
     private void OnAttack(InputValue value)
     {
-
+        isAttacking = value.isPressed;
+        anim.SetBool(IsAttackingHash, value.isPressed);
     }
 
     private void OnLook(InputValue value)
     {
 
+    }
+
+    private void Update()
+    {
+        if (isAttacking)
+        {
+            isAttacking = anim.GetBool(IsAttackingHash);
+                
+            return;
+        }
+
+        moveDirection = transform.forward * inputVector.y + transform.right * inputVector.x;
+
+        float currentSpeed = isRunning ? runSpeed : walkSpeed;
+
+        Vector3 movementDirection = moveDirection * (currentSpeed * Time.deltaTime);
+        transform.position += movementDirection;
     }
 }
