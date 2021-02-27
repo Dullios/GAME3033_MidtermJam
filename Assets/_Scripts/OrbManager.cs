@@ -25,7 +25,12 @@ public class OrbManager : MonoBehaviour
         mats[0] = orbMaterials[index];
         orbTemp.GetComponent<MeshRenderer>().materials = mats;
         orbTemp.GetComponent<OrbBehaviour>().colorType = (ColorType)index;
-        // TODO: give orbTemp the max velocity of the two other orbs
+
+        Vector3 vel1 = orb1.GetComponent<Rigidbody>().velocity;
+        float mag1 = vel1.magnitude;
+        Vector3 vel2 = orb2.GetComponent<Rigidbody>().velocity;
+        float mag2 = vel2.magnitude;
+        orbTemp.GetComponent<Rigidbody>().velocity = Mathf.Max(mag1, mag2) == mag1 ? vel1 : vel2;
 
         ResetOrb(orb1);
         ResetOrb(orb2);
