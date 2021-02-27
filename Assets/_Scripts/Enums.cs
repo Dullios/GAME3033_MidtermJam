@@ -13,8 +13,6 @@ public enum ColorType
 public enum AIState
 {
     IDLE,
-    TURNLEFT,
-    TURNRIGHT,
     WANDER,
     SEEK
 }

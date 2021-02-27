@@ -9,6 +9,8 @@ public class BugBehaviour : MonoBehaviour
     private ColorType colorType;
     [SerializeField]
     private AIState state;
+    [SerializeField]
+    private bool isCaptivated;
 
     [Header("Movement")]
     [SerializeField]
@@ -18,9 +20,9 @@ public class BugBehaviour : MonoBehaviour
     [SerializeField]
     private bool isRunning;
     [SerializeField]
-    private Vector3 targetPos;
-    [SerializeField]
     private float rotateVelocity;
+    [SerializeField]
+    private Vector3 targetPos;
     [SerializeField]
     private float targetRange;
 
@@ -50,6 +52,11 @@ public class BugBehaviour : MonoBehaviour
         anim = gameObject.GetComponent<Animator>();
 
         lightPosts = GameObject.FindGameObjectsWithTag("Light");
+
+        foreach(GameObject light in lightPosts)
+        {
+            light.GetComponent<LightPostBehaviour>().lightActivatedEvent.AddListener(LightActivatedHandler);
+        }
     }
 
     // Update is called once per frame
@@ -58,37 +65,83 @@ public class BugBehaviour : MonoBehaviour
         switch(state)
         {
             case AIState.IDLE:
-                if(idleRoutine == null)
+                if(idleRoutine == null && !isCaptivated)
                     idleRoutine = StartCoroutine(IdleRoutine(Random.Range(1, 3)));
                 break;
-            case AIState.TURNLEFT:
-                break;
-            case AIState.TURNRIGHT:
-                break;
             case AIState.WANDER:
-                // Rotate to face target position
-                Vector3 dir = targetPos - transform.position;
-                Quaternion rot = Quaternion.LookRotation(dir);
-                transform.rotation = Quaternion.Slerp(transform.rotation, rot, rotateVelocity * Time.deltaTime);
-
                 anim.SetFloat(MovementYHash, 1.0f);
 
-                // Walk forwards
-                float currentSpeed = isRunning ? runSpeed : walkSpeed;
-
-                Vector3 movementDirection = transform.forward * (currentSpeed * Time.deltaTime);
-                transform.position += movementDirection;
-
-                if(Vector3.Distance(targetPos, transform.position) < targetRange)
+                if(!IsMoving())
                 {
                     anim.SetFloat(MovementYHash, 0.0f);
                     state = AIState.IDLE;
                 }
                 break;
             case AIState.SEEK:
+                isCaptivated = true;
+                anim.SetFloat(MovementYHash, 1.0f);
+                anim.SetBool(IsRunningHash, true);
 
+                if (!IsMoving())
+                {
+                    anim.SetFloat(MovementYHash, 0.0f);
+                    anim.SetBool(IsRunningHash, false);
+                    state = AIState.IDLE;
+                }
                 break;
         }
+    }
+
+    public void LightActivatedHandler(GameObject light)
+    {
+        LightPostBehaviour behaviour = light.GetComponent<LightPostBehaviour>();
+
+        if(!isCaptivated && CompareColor(behaviour.colorType))
+        {
+            if(idleRoutine != null)
+            {
+                StopCoroutine(idleRoutine);
+                idleRoutine = null;
+            }
+
+            lightTarget = light;
+            targetPos = light.transform.position;
+            targetPos.y = 0.25f;
+            state = AIState.SEEK;
+        }
+        else if(isCaptivated && light == lightTarget)
+        {
+            if (!CompareColor(behaviour.colorType))
+            {
+                isCaptivated = false;
+                lightTarget = null;
+            }
+        }
+    }
+
+    private bool CompareColor(ColorType c)
+    {
+        bool compare = false;
+
+        if (colorType == c)
+            compare = true;
+        else if(colorType == ColorType.GREEN)
+        {
+            if (c == ColorType.BLUE || c == ColorType.YELLOW)
+                compare = true;
+        }
+        else if (colorType == ColorType.ORANGE)
+        {
+            if (c == ColorType.RED || c == ColorType.YELLOW)
+                compare = true;
+        }
+        else if (colorType == ColorType.PURPLE)
+        {
+            if (c == ColorType.BLUE || c == ColorType.RED)
+                compare = true;
+        }
+
+        return compare;
     }
 
     IEnumerator IdleRoutine(float time)
@@ -102,5 +155,28 @@ public class BugBehaviour : MonoBehaviour
         state = AIState.WANDER;
 
         idleRoutine = null;
+    }
+
+    private bool IsMoving()
+    {
+        bool temp = true;
+
+        // Rotate to face target position
+        Vector3 dir = targetPos - transform.position;
+        Quaternion rot = Quaternion.LookRotation(dir);
+        transform.rotation = Quaternion.Slerp(transform.rotation, rot, rotateVelocity * Time.deltaTime);
+
+        // Walk forwards
+        float currentSpeed = isRunning ? runSpeed : walkSpeed;
+
+        Vector3 movementDirection = transform.forward * (currentSpeed * Time.deltaTime);
+        transform.position += movementDirection;
+
+        if (Vector3.Distance(targetPos, transform.position) < targetRange)
+        {
+            temp = false;
+        }
+
+        return temp;
     }
 }
