@@ -36,7 +36,7 @@ public class OrbManager : MonoBehaviour
         ResetOrb(orb2);
     }
 
-    private void ResetOrb(GameObject orb)
+    public void ResetOrb(GameObject orb)
     {
         OrbBehaviour orbBehaviour = orb.GetComponent<OrbBehaviour>();
         orb.transform.position = orbBehaviour.startPosition;
