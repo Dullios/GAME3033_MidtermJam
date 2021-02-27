@@ -3,7 +3,10 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Orb
+  - Light
+  - Bug
   layers:
   - Default
   - TransparentFX

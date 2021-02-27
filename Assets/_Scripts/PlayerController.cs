@@ -16,7 +16,7 @@ public class PlayerController : MonoBehaviour
     public readonly int IsRunningHash = Animator.StringToHash("isRunning");
     public readonly int IsAttackingHash = Animator.StringToHash("isAttacking");
 
-    [Header("Movement Stats")]
+    [Header("Movement Properties")]
     [SerializeField]
     private Vector3 moveDirection;
     [SerializeField]
@@ -27,6 +27,19 @@ public class PlayerController : MonoBehaviour
     private bool isRunning;
     [SerializeField]
     private bool isAttacking;
+
+    [Header("Look Properties")]
+    [SerializeField]
+    private float rotationPower = 10.0f;
+    [SerializeField]
+    private float horizontalDampening = 1.0f;
+    private Vector2 previousMouseDelta = Vector2.zero;
+
+    [Header("Explosive Properties")]
+    [SerializeField]
+    private float explosiveForce;
+    [SerializeField]
+    private float explosiveRadius;
 
     private Vector2 inputVector;
 
@@ -62,7 +75,13 @@ public class PlayerController : MonoBehaviour
 
     private void OnLook(InputValue value)
     {
+        Vector2 lookValue = value.Get<Vector2>();
 
+        Quaternion addedRotation = Quaternion.AngleAxis(Mathf.Lerp(previousMouseDelta.x, lookValue.x, 1.0f / horizontalDampening) * rotationPower, transform.up);
+
+        transform.rotation *= addedRotation;
+
+        previousMouseDelta = lookValue;
     }
 
     private void Update()
@@ -80,5 +99,13 @@ public class PlayerController : MonoBehaviour
 
         Vector3 movementDirection = moveDirection * (currentSpeed * Time.deltaTime);
         transform.position += movementDirection;
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if(isAttacking && collision.gameObject.CompareTag("Orb"))
+        {
+            collision.rigidbody.AddExplosionForce(explosiveForce, collision.contacts[0].point, explosiveRadius);
+        }
     }
 }
