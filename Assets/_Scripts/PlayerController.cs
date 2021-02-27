@@ -106,6 +106,7 @@ public class PlayerController : MonoBehaviour
         if(isAttacking && collision.gameObject.CompareTag("Orb"))
         {
             collision.rigidbody.AddExplosionForce(explosiveForce, collision.contacts[0].point, explosiveRadius);
+            collision.gameObject.GetComponent<OrbBehaviour>().LaunchOrb();
         }
     }
 }

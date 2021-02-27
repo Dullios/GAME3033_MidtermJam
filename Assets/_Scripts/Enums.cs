@@ -1,10 +1,11 @@
 [System.Serializable]
 public enum ColorType
 {
-    RED,
     BLUE,
-    YELLOW,
     GREEN,
     ORANGE,
-    PURPLE
+    PURPLE,
+    RED,
+    YELLOW,
+    COUNT
 }
