@@ -1,9 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class LightPostBehaviour : MonoBehaviour
 {
+    public UnityEvent<GameObject> lightActivatedEvent;
+
     [Header("Light Post Parts")]
     public GameObject[] pieces;
     public Light pointLight;
@@ -37,6 +40,8 @@ public class LightPostBehaviour : MonoBehaviour
                 Destroy(other.gameObject);
             else
                 OrbManager.instance.ResetOrb(other.gameObject);
+
+            lightActivatedEvent.Invoke(gameObject);
         }
     }
 }

@@ -9,3 +9,12 @@ public enum ColorType
     YELLOW,
     COUNT
 }
+
+public enum AIState
+{
+    IDLE,
+    TURNLEFT,
+    TURNRIGHT,
+    WANDER,
+    SEEK
+}
