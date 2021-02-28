@@ -43,7 +43,6 @@ public class BugManager : MonoBehaviour
 
         // TODO: set up UI
 
-        // TODO: spawn bugs
         SpawnBugs();
     }
 

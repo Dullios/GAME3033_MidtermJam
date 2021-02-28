@@ -114,6 +114,11 @@ public class BugBehaviour : MonoBehaviour
             {
                 isCaptivated = false;
                 lightTarget = null;
+
+                foreach (GameObject l in lightPosts)
+                {
+                    LightActivatedHandler(l);
+                }
             }
         }
     }
