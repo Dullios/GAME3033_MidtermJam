@@ -30,7 +30,7 @@ public class PlayerController : MonoBehaviour
 
     [Header("Look Properties")]
     [SerializeField]
-    private float rotationPower = 10.0f;
+    private float rotationPower;
     [SerializeField]
     private float horizontalDampening = 1.0f;
     private Vector2 previousMouseDelta = Vector2.zero;
@@ -51,6 +51,11 @@ public class PlayerController : MonoBehaviour
     {
         Cursor.lockState = CursorLockMode.Locked;
         anim = GetComponent<Animator>();
+
+        if(Application.platform == RuntimePlatform.WebGLPlayer)
+        {
+            rotationPower *= 4;
+        }
     }
 
     private void OnMovement(InputValue value)
