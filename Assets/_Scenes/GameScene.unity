@@ -2333,7 +2333,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1549728513
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4174,6 +4174,7 @@ MonoBehaviour:
   horizontalDampening: 5
   explosiveForce: 1000
   explosiveRadius: 5
+  pausePanel: {fileID: 1549728512}
 --- !u!54 &1375721847576320098
 Rigidbody:
   m_ObjectHideFlags: 0

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 [System.Serializable]
@@ -50,6 +51,30 @@ public class BugManager : MonoBehaviour
         InitializeUI();
 
         SpawnBugs();
+    }
+
+    private void Update()
+    {
+        bool passed = true;
+
+        foreach(BugPit bp in bugPits)
+        {
+            if(bp.currentCount != bp.maxCount)
+            {
+                passed = false;
+                break;
+            }
+        }
+
+        if (passed)
+            StartCoroutine(GameOver());
+    }
+
+    IEnumerator GameOver()
+    {
+        yield return new WaitForSeconds(2);
+
+        SceneManager.LoadScene(0);
     }
 
     private void InitiatePits()
