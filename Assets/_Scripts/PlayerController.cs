@@ -43,6 +43,10 @@ public class PlayerController : MonoBehaviour
 
     private Vector2 inputVector;
 
+    [Header("Pause Menu")]
+    [SerializeField]
+    private GameObject pausePanel;
+
     private void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
@@ -83,6 +87,20 @@ public class PlayerController : MonoBehaviour
         transform.rotation *= addedRotation;
 
         previousMouseDelta = lookValue;
+    }
+
+    private void OnPause(InputValue value)
+    {
+        if(pausePanel.activeSelf)
+        {
+            Time.timeScale = 1;
+            pausePanel.SetActive(false);
+        }
+        else
+        {
+            Time.timeScale = 0;
+            pausePanel.SetActive(true);
+        }
     }
 
     private void Update()

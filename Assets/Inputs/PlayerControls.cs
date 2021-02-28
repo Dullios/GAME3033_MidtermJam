@@ -57,6 +57,14 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": ""NormalizeVector2"",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""Pause"",
+                    ""type"": ""Button"",
+                    ""id"": ""4951fd85-cf99-4ed3-9d88-9f9cb6b5b80b"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": ""Press""
                 }
             ],
             ""bindings"": [
@@ -158,6 +166,28 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""action"": ""Look"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1351368d-81b8-42d5-91b7-b7c988b089b0"",
+                    ""path"": ""<Keyboard>/enter"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Pause"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d15bc721-376f-4ff3-b691-b0a8687de08e"",
+                    ""path"": ""<Keyboard>/numpadEnter"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Pause"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -171,6 +201,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         m_PayerMap_Jump = m_PayerMap.FindAction("Jump", throwIfNotFound: true);
         m_PayerMap_Attack = m_PayerMap.FindAction("Attack", throwIfNotFound: true);
         m_PayerMap_Look = m_PayerMap.FindAction("Look", throwIfNotFound: true);
+        m_PayerMap_Pause = m_PayerMap.FindAction("Pause", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -225,6 +256,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
     private readonly InputAction m_PayerMap_Jump;
     private readonly InputAction m_PayerMap_Attack;
     private readonly InputAction m_PayerMap_Look;
+    private readonly InputAction m_PayerMap_Pause;
     public struct PayerMapActions
     {
         private @PlayerControls m_Wrapper;
@@ -234,6 +266,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         public InputAction @Jump => m_Wrapper.m_PayerMap_Jump;
         public InputAction @Attack => m_Wrapper.m_PayerMap_Attack;
         public InputAction @Look => m_Wrapper.m_PayerMap_Look;
+        public InputAction @Pause => m_Wrapper.m_PayerMap_Pause;
         public InputActionMap Get() { return m_Wrapper.m_PayerMap; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -258,6 +291,9 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @Look.started -= m_Wrapper.m_PayerMapActionsCallbackInterface.OnLook;
                 @Look.performed -= m_Wrapper.m_PayerMapActionsCallbackInterface.OnLook;
                 @Look.canceled -= m_Wrapper.m_PayerMapActionsCallbackInterface.OnLook;
+                @Pause.started -= m_Wrapper.m_PayerMapActionsCallbackInterface.OnPause;
+                @Pause.performed -= m_Wrapper.m_PayerMapActionsCallbackInterface.OnPause;
+                @Pause.canceled -= m_Wrapper.m_PayerMapActionsCallbackInterface.OnPause;
             }
             m_Wrapper.m_PayerMapActionsCallbackInterface = instance;
             if (instance != null)
@@ -277,6 +313,9 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @Look.started += instance.OnLook;
                 @Look.performed += instance.OnLook;
                 @Look.canceled += instance.OnLook;
+                @Pause.started += instance.OnPause;
+                @Pause.performed += instance.OnPause;
+                @Pause.canceled += instance.OnPause;
             }
         }
     }
@@ -288,5 +327,6 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         void OnJump(InputAction.CallbackContext context);
         void OnAttack(InputAction.CallbackContext context);
         void OnLook(InputAction.CallbackContext context);
+        void OnPause(InputAction.CallbackContext context);
     }
 }
