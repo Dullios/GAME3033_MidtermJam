@@ -5,8 +5,7 @@ using UnityEngine;
 public class BugBehaviour : MonoBehaviour
 {
     [Header("Properties")]
-    [SerializeField]
-    private ColorType colorType;
+    public ColorType colorType;
     [SerializeField]
     private AIState state;
     [SerializeField]

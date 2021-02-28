@@ -646,7 +646,7 @@ GameObject:
   - component: {fileID: 6643561567170693636}
   m_Layer: 0
   m_Name: Metalon Bug
-  m_TagString: Untagged
+  m_TagString: Bug
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -716,11 +716,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   colorType: 1
   state: 0
+  isCaptivated: 0
   walkSpeed: 6
   runSpeed: 10
   isRunning: 0
-  targetPos: {x: 0, y: 0, z: 0}
   rotateVelocity: 1
+  targetPos: {x: 0, y: 0, z: 0}
   targetRange: 3
   lightPosts: []
   minBounds: {x: -48, y: 0.25, z: -48}
